@@ -1,7 +1,6 @@
 @font-face {
   font-family: "ColfaxAI";
-  src: url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff2)
-      format("woff2"),
+  src: url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff2) format("woff2"),
     url(https://cdn.openai.com/API/fonts/ColfaxAIRegular.woff) format("woff");
   font-weight: normal;
   font-style: normal;
@@ -62,6 +61,56 @@
   cursor: pointer;
 }
 .main .result {
-  font-weight: bold;
-  margin-top: 40px;
+  font-weight: 400;
+  margin-top: 70px;
+  max-width: 500px;
+  padding: 30px 20px;
+  border: 1px solid #10a37f;
+  border-radius: 4px;
+  font-style: italic;
+  text-align: justify;
+}
+
+.buttonContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 35px;
+}
+
+.btnPrimary {
+  box-sizing: content-box;
+  padding: 12px 0;
+  color: #fff;
+  background-color: #10a37f;
+  border: 1px solid #10a37f;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  width: 45%;
+  transition: all 0.25s ease-out;
+}
+
+.btnPrimary:hover {
+  transition: all 0.25s ease-out;
+  background-color: #057e60;
+  border-color: #057e60;
+}
+
+.btnSecondary {
+  box-sizing: content-box;
+  width: 45%;
+  padding: 12px 0;
+  color: black;
+  background-color: white;
+  border: 1px solid #10a37f;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease-out;
+}
+
+.btnSecondary:hover {
+  border: 1px solid #057e60;
+  transition: all 0.25s ease-out;
 }
