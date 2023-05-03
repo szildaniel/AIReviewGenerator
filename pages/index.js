@@ -1,16 +1,26 @@
 import Head from "next/head";
 import { useState } from "react";
-import styles from "./index.module.css";
+import styles from "../styles/index.module.css";
+import { FormReviewGenerator } from "./components/FormReviewGenerator";
+import { Result } from "./components/Result";
+import { ErrorInfo } from "./components/ErrorInfo";
+import { SkeletonResult } from "./components/SkeletonResult";
 
 export default function Home() {
   const [inputs, setInputs] = useState({
     industryInput: "",
     companyInput: "",
   });
+
   const [result, setResult] = useState();
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function onSubmit(event) {
     event.preventDefault();
+    result && setResult(null);
+    setIsLoading(true);
     try {
       const response = await fetch("/api/generateReview", {
         method: "POST",
@@ -22,14 +32,21 @@ export default function Home() {
 
       const data = await response.json();
       if (response.status !== 200) {
+        setIsError(true);
+        setIsLoading(false);
+        setErrorMsg("Error: Server error request failed. Please contact: contact@justreview.co");
         throw data.error || new Error(`Request failed with status ${response.status}`);
       }
-      console.log("data", data);
+      setIsError(false);
+      setErrorMsg("");
       setResult(data.data);
+      setIsLoading(false);
     } catch (error) {
       // Consider implementing your own error handling logic here
       console.error(error);
-      alert(error.message);
+      setIsLoading(false);
+      setIsError(true);
+      setErrorMsg(`Error: ${error.message}`);
     }
   }
 
@@ -37,39 +54,20 @@ export default function Home() {
     <div>
       <Head>
         <title>OpenAI Review Generator</title>
-        <link rel="icon" href="/dog.png" />
+        <link rel="icon" href="/img/favicon-star-gold.png" />
       </Head>
 
       <main className={styles.main}>
-        <img src="/dog.png" className={styles.icon} />
-        <h3>OpenAI Review Generator</h3>
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            name="companyName"
-            placeholder="Enter company name"
-            value={inputs.companyInput}
-            onChange={(e) => setInputs({ ...inputs, companyInput: e.target.value })}
-          />
-          <input
-            type="text"
-            name="industry"
-            placeholder="Enter your company's industry"
-            value={inputs.industryInput}
-            onChange={(e) => setInputs({ ...inputs, industryInput: e.target.value })}
-          />
-          <input type="submit" value="Generate review" />
-        </form>
-        <div className={styles.result}>
-          {result}
-          {result && (
-            <div className={styles.buttonContainer}>
-              <button className={styles.btnPrimary}>Add review</button>
-              <button className={styles.btnSecondary}>Generate new</button>
-            </div>
-          )}
-        </div>
+        <img src="/img/justreview.svg" className={styles.icon} />
+        <h1 className={styles.heading}>OpenAI Review Generator</h1>
+        <FormReviewGenerator inputs={inputs} setInputs={setInputs} onSubmit={onSubmit} />
+        {isLoading && !result ? (
+          <SkeletonResult></SkeletonResult>
+        ) : (
+          <Result result={result} styles={styles} />
+        )}
       </main>
+      <ErrorInfo msg={errorMsg} />
     </div>
   );
 }
